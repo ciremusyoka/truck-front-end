@@ -4,6 +4,7 @@
 	--neutral-8: #595959;
 	--neutral-9: #434343;
   --primary-color: #034a58ab;
+  --primary-dark: #034C58;
   --secondary-color: #061830;
   --secondary-light: #061830cc;
   --whitish: #ffffffe0;
@@ -62,17 +63,17 @@ body {
   }
 }
 
-.default-btn {
+.primary-btn {
   background: var(--primary-color);
   color: white;
   outline: var(--primary-color);
   border: 1px solid var(--primary-color);
   
   &:hover, &:active{
-    background-color: var(--secondary-light) !important;
+    background-color: var(--primary-dark) !important;
     color: white !important;
-    outline: var(--secondary-light) !important;
-    border: 1px solid var(--secondary-light) !important;
+    outline: var(--primary-dark) !important;
+    border: 1px solid var(--primary-dark) !important;
   }
 }
 

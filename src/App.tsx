@@ -3,8 +3,11 @@ import 'antd/dist/reset.css';
 import Home from './components/home';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Login } from './pages/login';
-import { LOGIN_LINK, SIGN_IN_LINK } from './utils/constants';
+import { COMPANIES_LINK, LOGIN_LINK, SIGN_IN_LINK, TRIPS_LINK } from './utils/constants';
 import { Register } from './pages/signin';
+import AdminLayout from './components/sideLayout';
+import {TripsList} from './pages/trips';
+import {CompaniesList} from './pages/companies';
 
 function App() {
   return (
@@ -15,6 +18,11 @@ function App() {
           <Route path={LOGIN_LINK} element={<Login />} />
           <Route path={SIGN_IN_LINK} element={<Register />} />
           {/* <Route path="*" element={<NotFound />} />  */}
+          {/* Admin Layout with Nested Routes */}
+        <Route path="/" element={<AdminLayout />}>
+          <Route path={TRIPS_LINK} element={<TripsList />} />
+          <Route path={COMPANIES_LINK} element={<CompaniesList />} />
+        </Route>
         </Routes>
       </Router>
     </div>
