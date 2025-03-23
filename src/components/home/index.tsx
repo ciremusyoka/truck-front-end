@@ -1,3 +1,4 @@
+import FeatureSection from './featureSection'
 import HeroSection from './heroSection'
 
 
@@ -5,8 +6,8 @@ const Home = () => {
     return (
         <div>
 			<HeroSection />
-			{/* <FeatureSection />
-			<LibrarySection />
+			<FeatureSection />
+			{/* <LibrarySection />
 			<FaqSection />
 			<RequestDemoCard ref={requestDemoCardRef} />
 			<Footer />
