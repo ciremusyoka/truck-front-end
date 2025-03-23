@@ -1,4 +1,8 @@
-const SpotterText = () => {
+type LogoNameColor = {
+  nameColor?: string
+}
+
+const SpotterText = ({nameColor="white"}: LogoNameColor) => {
     return (
         <svg
             id="Layer_1"
@@ -7,7 +11,7 @@ const SpotterText = () => {
             y="0px"
             viewBox="0 0 2146.4 576"
             height="25"
-            color="white"
+            color={nameColor}
         >
             <style type="text/css">{".st0 {fill: currentColor;}"}</style>
             <g id="white_logo">
@@ -23,7 +27,7 @@ const SpotterText = () => {
     )
 }
 
-const Logo = () => {
+const Logo = ({nameColor}: LogoNameColor) => {
     return (
       <a href="/" className="logo">
         <svg
@@ -46,7 +50,7 @@ const Logo = () => {
         </svg>
         <span style={{paddingRight: "10px"}} />
   
-        <SpotterText />
+        <SpotterText nameColor={nameColor}/>
       </a>
     );
   };
