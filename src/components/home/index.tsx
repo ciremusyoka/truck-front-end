@@ -1,3 +1,4 @@
+import Footer from '../footer'
 import FeatureSection from './featureSection'
 import HeroSection from './heroSection'
 
@@ -7,11 +8,7 @@ const Home = () => {
         <div>
 			<HeroSection />
 			<FeatureSection />
-			{/* <LibrarySection />
-			<FaqSection />
-			<RequestDemoCard ref={requestDemoCardRef} />
 			<Footer />
-			<Footnote /> */}
 		</div>
     )
 }

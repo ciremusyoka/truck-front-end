@@ -1,0 +1,12 @@
+.footer {
+    background: var(--secondary-color);
+    height: 60px;
+    margin: auto;
+}
+
+.text {
+    color: var(--whitish);
+    background: var(--secondary-color);
+    height: 60px;
+    margin: auto;
+}
