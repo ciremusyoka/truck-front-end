@@ -1,38 +1,63 @@
-.App {
-  text-align: center;
+:root {
+	--neutral-2: #FAFAFA;
+	--neutral-4: #F0F0F0;
+	--neutral-8: #595959;
+	--neutral-9: #434343;
+  --primary-color: #034a58ab;
+  --secondary-color: #061830;
+  --secondary-light: #061830cc;
+  --whitish: #ffffffe0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.container {
+  max-width: 1256px;
+  margin: auto;
+}
+
+.section {
+  padding-left: 92px;
+  padding-right: 92px;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .section {
+      padding-left: 62px;
+      padding-right: 62px;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+@media (max-width: 576px) {
+  .section {
+      padding-left: 31px;
+      padding-right: 31px;
+  }
+}
+
+@media (max-width: 400px) {
+  .section {
+      padding-left: 20px;
+      padding-right: 20px;
+  }
+}
+
+.default-btn {
+  background: var(--secondary-color);
   color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+  outline: var(--secondary-color);
+  border: 1px solid var(--secondary-color);
+  
+  &:hover, &:active{
+    background-color: var(--secondary-light) !important;
+    color: white !important;
+    outline: var(--secondary-light) !important;
+    border: 1px solid var(--secondary-light) !important;
   }
 }

@@ -1,0 +1,30 @@
+.content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-top: 50px;
+}
+
+.link {
+	color: white;
+	outline: none;
+	text-decoration: none;
+	padding-left: 5px;
+	
+}
+
+@media (max-width: 576px) {
+	.content {
+		padding-top: 30px;
+	}
+}
+
+@media (max-width: 400px) {
+	.content {
+		padding-top: 20px;
+	}
+	.logo {
+		width: 140px;
+		margin-right: 10px;
+	}
+}
