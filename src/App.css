@@ -95,3 +95,21 @@ body {
 .main-text {
   color: var(--primary-color);
 }
+
+.ant-menu-item-selected {
+  background: var(--primary-dark) !important;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.recharts-wrapper, .recharts-surface {
+  width: 100% !important;
+}
+
+#driver-logger {
+  
+  
+  
+}

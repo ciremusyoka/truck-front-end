@@ -26,7 +26,7 @@ const AdminLayout = () => {
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="demo-logo-vertical">
+        <div style={{paddingLeft: "8px"}} className="demo-logo-vertical">
             <br/>
             <Logo />
             <br/><br/>

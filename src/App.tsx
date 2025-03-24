@@ -8,6 +8,7 @@ import { Register } from './pages/signin';
 import AdminLayout from './components/sideLayout';
 import {TripsList} from './pages/trips';
 import {CompaniesList} from './pages/companies';
+import { DriversDailyLog } from './components/driverLogger';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<AdminLayout />}>
           <Route path={TRIPS_LINK} element={<TripsList />} />
           <Route path={COMPANIES_LINK} element={<CompaniesList />} />
+          <Route path={'/log'} element={<DriversDailyLog />} />
         </Route>
         </Routes>
       </Router>
