@@ -16,10 +16,6 @@
     min-width: 20px;
 }
 
-.locationWrapper {
-    margin-top: 10px;
-}
-
 .location {
     width: 80%;
     display: flex;
@@ -61,4 +57,8 @@
 
 .recap {
     padding-left: 40px !important;
+}
+
+.underline {
+    border-bottom: 1px solid black;
 }
