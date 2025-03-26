@@ -1,98 +1,122 @@
 import React from 'react';
-import { Button, Space, Table, Tag, Typography } from 'antd';
+import { Button, Space, Spin, Table, Typography } from 'antd';
 import type { TableProps } from 'antd';
+import { TripType } from '../../components/driverLogger/dailyLogs';
+import { COMPANIES_LINK, TRIPS_LINK } from '../../utils/constants';
+import { Link } from 'react-router-dom';
+import axiosClient from '../../utils/axiosClient';
+import { useQuery } from '@tanstack/react-query';
+import { ArrowRightOutlined } from "@ant-design/icons";
 
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
-}
+export const getTripData = async () => {
+  const { data } = await axiosClient.get(`/trips/`);
+  return data;
+};
 
-const columns: TableProps<DataType>['columns'] = [
+const columns: TableProps<TripType>['columns'] = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
+    title: 'status',
+    key: 'status',
+    dataIndex: 'status',
+    fixed: 'left',
+    render: (_, { status, id }) => (
       <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
+        {status === "ONGOING" && <span style={{color: "green"}}>On going</span>}
+        {status === "CANCELLED" && <span style={{color: "red"}}> Cancelled</span>}
+        {status === "COMPLETED" && <span style={{color: "blue"}}>Completed</span>}
+        <br/> <br/>
+        <Link to={`${TRIPS_LINK}/${id}`}>TRIP LOGS  <ArrowRightOutlined /></Link>
       </>
     ),
   },
   {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
-
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
+    title: 'Company',
+    dataIndex: 'company',
+    key: 'company',
+    render: (_, {company}) => <Link to={`${COMPANIES_LINK}/${company.id}`}>{company.name}</Link>,
   },
   {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
+    title: 'Start Date',
+    dataIndex: 'start_date',
+    key: 'start_date',
   },
   {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
+    title: 'End Date',
+    dataIndex: 'end_date',
+    key: 'end_date',
   },
+  {
+    title: 'from',
+    dataIndex: 'starting_location',
+    key: 'starting_location',
+    render: (_, {starting_location}) => <span>{starting_location.address}</span>
+  },
+  {
+    title: 'to',
+    dataIndex: 'ending_location',
+    key: 'ending_location',
+    render: (_, {ending_location}) => <span>{ending_location.address}</span>
+  },
+  {
+    title: 'Start milage',
+    dataIndex: 'start_mileage',
+    key: 'start_mileage',
+  },
+  {
+    title: 'Recent milage reading',
+    dataIndex: 'last_odm_reading',
+    key: 'last_odm_reading',
+  },
+  {
+    title: 'Manifest No.',
+    dataIndex: 'manifest_no',
+    key: 'manifest_no',
+  },
+  {
+    title: 'shipper',
+    dataIndex: 'shipper',
+    key: 'shipper',
+  },
+  {
+    title: 'commodity',
+    dataIndex: 'commodity',
+    key: 'commodity',
+  },
+  {
+    title: 'Driver',
+    dataIndex: 'driver',
+    key: 'driver',
+    render: (_, {driver}) => <span>{driver.license_number}</span>,
+  },
+  {
+    title: 'Vehicle LN.',
+    dataIndex: 'vehicle',
+    key: 'vehicle',
+    render: (_, {vehicle}) => <span>{vehicle.license_plate}</span>
+  }
 ];
 
 export const TripsList: React.FC = () => {
-    return (
-        <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <Typography.Title level={2}>Trips</Typography.Title>
-                <Space>
-                <Button type="primary" className='primary-btn'>Add Trip</Button>
-                </Space>
-            </div>
-            <Table<DataType> columns={columns} dataSource={data} />
-        </>
-    )
+  const { data, isLoading } = useQuery({
+    queryKey: ['trips'],
+    queryFn: getTripData
+  });
+
+  if(isLoading && !data) {
+    <Spin fullscreen />
+  }
+
+  return (
+      <>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <Typography.Title level={2}>Trips</Typography.Title>
+              <Space>
+              <Button type="primary" className='primary-btn'>Add Trip</Button>
+              </Space>
+          </div>
+          <div>
+          <Table<TripType> columns={columns} dataSource={data} scroll={{ x: 'max-content' }} />
+          </div>
+      </>
+  )
 }

@@ -8,8 +8,8 @@ import { Register } from './pages/signin';
 import AdminLayout from './components/sideLayout';
 import {TripsList} from './pages/trips';
 import {CompaniesList} from './pages/companies';
-import { DriverLogs } from './components/driverLogger';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { DriverLogs } from './pages/tripLogger';
 
 const queryClient = new QueryClient();
 
@@ -26,7 +26,7 @@ function App() {
         <Route path="/" element={<AdminLayout />}>
           <Route path={TRIPS_LINK} element={<TripsList />} />
           <Route path={COMPANIES_LINK} element={<CompaniesList />} />
-          <Route path={'/log'} element={<DriverLogs />} />
+          <Route path={`${TRIPS_LINK}/:id`} element={<DriverLogs />} />
         </Route>
         </Routes>
       </Router>

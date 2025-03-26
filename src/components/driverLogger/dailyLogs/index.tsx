@@ -7,7 +7,7 @@ import style from '../index.module.css';
 
 const { Title, Text } = Typography;
 
-type TripType = {
+export type TripType = {
     id: number;
     start_date: string;
     last_odm_reading: number;
@@ -24,6 +24,7 @@ type TripType = {
     driver: {
       id: number;
       home_terminal: string;
+      license_number: string;
     };
     end_date: string | null;
     starting_location: {
