@@ -1,100 +1,90 @@
 import React from 'react';
-import { Button, Space, Table, Tag, Typography } from 'antd';
+import { Button, Space, Spin, Table, Typography } from 'antd';
 import type { TableProps } from 'antd';
+import { useQuery } from '@tanstack/react-query';
+import axiosClient from '../../utils/axiosClient';
+import { ArrowRightOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+import { TRIPS_LINK } from '../../utils/constants';
 
-interface DataType {
-  key: string;
+const getCompanyData = async () => {
+  const { data } = await axiosClient.get(`/companies/`);
+  return data;
+};
+
+type CompanyType = {
+  id: number;
   name: string;
-  age: number;
-  address: string;
-  tags: string[];
-}
+  main_office_address: string;
+  phone_number: string;
+  email: string;
+  created_by: number;
+  admins: number[];
+  date_created: string; // ISO date string
+  date_updated: string; // ISO date string
+};
 
-const columns: TableProps<DataType>['columns'] = [
+const columns: TableProps<CompanyType>['columns'] = [
   {
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    fixed: 'left',
+    render: (_, {name}) => (
+      <>
+      <div>{name}</div>
+      <Link to={`${TRIPS_LINK}`}>COMPANY TRIPS <ArrowRightOutlined /></Link>
+      </>
+    )
   },
   {
     title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'main_office_address',
+    key: 'main_office_address',
   },
   {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
+    title: 'Phone number',
+    dataIndex: 'phone_number',
+    key: 'phone_number',
   },
   {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
+    title: 'Phone number',
+    dataIndex: 'phone_number',
+    key: 'phone_number',
+  },
+  {
+    title: 'Email',
+    dataIndex: 'email',
+    key: 'email',
+  },
+  {
+    title: 'Date Created',
+    dataIndex: 'date_created',
+    key: 'date_created',
   },
 ];
 
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
 
 export const CompaniesList: React.FC = () => {
-    return(
-        <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <Typography.Title level={2}>Companies</Typography.Title>
-                <Space>
-                <Button type="primary" className='primary-btn'>Add Driver</Button>
-                <Button type="primary" className='primary-btn'>Add Trip</Button>
-                <Button type="primary" className='primary-btn'>Add Company</Button>
-                </Space>
-            </div>
-            <Table<DataType> columns={columns} dataSource={data} />
-        </>
-    )
+  const { data, isLoading } = useQuery({
+    queryKey: ['companies'],
+    queryFn: getCompanyData
+  });
+
+  if(isLoading) {
+    <Spin fullscreen />
+  }
+  return(
+      <>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <Typography.Title level={2}>Companies</Typography.Title>
+              <Space>
+              <Button type="primary" className='primary-btn'>Add Driver</Button>
+              <Button type="primary" className='primary-btn'>Add Trip</Button>
+              <Button type="primary" className='primary-btn'>Add Company</Button>
+              </Space>
+          </div>
+          <Table<CompanyType> columns={columns} dataSource={data} />
+      </>
+  )
 }
