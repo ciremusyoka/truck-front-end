@@ -6,7 +6,7 @@ import { COMPANIES_LINK, TRIPS_LINK } from '../../utils/constants';
 import { Link } from 'react-router-dom';
 import axiosClient from '../../utils/axiosClient';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowRightOutlined } from "@ant-design/icons";
+import { EyeOutlined, PlusOutlined } from "@ant-design/icons";
 
 export const getTripData = async () => {
   const { data } = await axiosClient.get(`/trips/`);
@@ -15,17 +15,27 @@ export const getTripData = async () => {
 
 const columns: TableProps<TripType>['columns'] = [
   {
-    title: 'status',
+    title: 'Actions',
     key: 'status',
     dataIndex: 'status',
     fixed: 'left',
     render: (_, { status, id }) => (
       <>
+        <Link to={`${TRIPS_LINK}/${id}`}> <EyeOutlined /> See trip logs</Link>
+        <br />
+        <Link to={`${TRIPS_LINK}/${id}/add-log`}> <PlusOutlined /> Add trip log</Link>
+      </>
+    ),
+  },
+  {
+    title: 'status',
+    key: 'status',
+    dataIndex: 'status',
+    render: (_, { status, id }) => (
+      <>
         {status === "ONGOING" && <span style={{color: "green"}}>On going</span>}
         {status === "CANCELLED" && <span style={{color: "red"}}> Cancelled</span>}
         {status === "COMPLETED" && <span style={{color: "blue"}}>Completed</span>}
-        <br/> <br/>
-        <Link to={`${TRIPS_LINK}/${id}`}>TRIP LOGS  <ArrowRightOutlined /></Link>
       </>
     ),
   },

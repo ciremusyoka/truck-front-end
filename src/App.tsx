@@ -10,6 +10,7 @@ import {TripsList} from './pages/trips';
 import {CompaniesList} from './pages/companies';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DriverLogs } from './pages/tripLogger';
+import { AddTripLog } from './pages/addTripLog';
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ function App() {
           <Route path={TRIPS_LINK} element={<TripsList />} />
           <Route path={COMPANIES_LINK} element={<CompaniesList />} />
           <Route path={`${TRIPS_LINK}/:id`} element={<DriverLogs />} />
+          <Route path={`${TRIPS_LINK}/:id/add-log`} element={<AddTripLog />} />
         </Route>
         </Routes>
       </Router>

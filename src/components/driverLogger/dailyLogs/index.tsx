@@ -74,7 +74,7 @@ const processSeriesData = (data: SeriesData[]) => {
     const processedData: ProcessedSeriesData[] = []
     let totalTime: number = 0;
     const activityTime: ActivityTime  = {} as any;
-    data.forEach(dt => {
+    data.forEach((dt) => {
         const hours = getHourDifference(dt.from as string, dt.to as string)
         totalTime += hours
         activityTime[dt.category] = (activityTime[dt.category] || 0) + hours
@@ -150,6 +150,11 @@ export const DriversDailyLog = ( { printRef, data, date, trip }: DriversDailyLog
     const dateMap = new Date(date);
     const monthName = dateMap.toLocaleString("en-US", { month: "long" });
     const {processedData, activityTime, totalTime} = processSeriesData(data);
+
+    let ondutyHours = 0
+    if(activityTime.ON_DUTY) ondutyHours += activityTime.ON_DUTY
+    if(activityTime.DRIVING) ondutyHours += activityTime.DRIVING
+    
     return (
         <div ref={printRef} id="driver-logger" className={style.wrapper} style={{ padding: 20,  margin: "auto" }}>
             <Row gutter={16} style={{ marginTop: 10 }}>
@@ -259,7 +264,7 @@ export const DriversDailyLog = ( { printRef, data, date, trip }: DriversDailyLog
 
                 <Col span={8} className={style.recap}>
                     <Title level={4}>Recap</Title>
-                    <div> <Text>On Duty Hours Today: <span style={{paddingLeft: "20px"}} className={style.underline}>{activityTime.ON_DUTY + activityTime.DRIVING}</span></Text></div>
+                    <div> <Text>On Duty Hours Today: <span style={{paddingLeft: "20px"}} className={style.underline}>{ondutyHours}</span></Text></div>
                     <div><Text>Total Hours Last 8 Days: <span className={style.underline}>_</span></Text></div>
                 </Col>
             </Row>
