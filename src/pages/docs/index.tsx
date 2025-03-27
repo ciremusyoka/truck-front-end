@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs, Card, Typography } from "antd";
+import { Tabs, Card, Typography, Divider } from "antd";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const { Title, Paragraph } = Typography;
@@ -18,6 +18,15 @@ const ApiDocs = () => {
     
   return (
     <Card title="API Documentation" style={{ maxWidth: 800, margin: "auto" }}>
+        <h1>Work Flow</h1>
+        <Divider/>
+        <p>1. Create User</p>
+        <p>2. Create Company</p>
+        <p>3. Create company drivers</p>
+        <p>4. Create company Vehicles</p>
+        <p>5. Create company Trios and assign driver and vehicle. A vehicle and a driver can only have one ongoing trip</p>
+        <p>6. Create activities for the trip. This includes Driving, onduty etc</p>
+        <Divider/>
       <Tabs activeKey={activeTab} onChange={handleTabChange}>
         <TabPane tab="Create User" key="1">
           <Title level={4}>Endpoint</Title>
