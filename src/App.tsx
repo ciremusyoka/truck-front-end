@@ -3,7 +3,7 @@ import 'antd/dist/reset.css';
 import Home from './components/home';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Login } from './pages/login';
-import { COMPANIES_LINK, LOGIN_LINK, SIGN_IN_LINK, TRIPS_LINK } from './utils/constants';
+import { API_DOCS_LINK, COMPANIES_LINK, LOGIN_LINK, SIGN_IN_LINK, TRIPS_LINK } from './utils/constants';
 import { Register } from './pages/signin';
 import AdminLayout from './components/sideLayout';
 import {TripsList} from './pages/trips';
@@ -11,6 +11,7 @@ import {CompaniesList} from './pages/companies';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DriverLogs } from './pages/tripLogger';
 import { AddTripLog } from './pages/addTripLog';
+import ApiDocs from './pages/docs';
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ function App() {
           <Route path={COMPANIES_LINK} element={<CompaniesList />} />
           <Route path={`${TRIPS_LINK}/:id`} element={<DriverLogs />} />
           <Route path={`${TRIPS_LINK}/:id/add-log`} element={<AddTripLog />} />
+          <Route path={API_DOCS_LINK} element={<ApiDocs />} />
         </Route>
         </Routes>
       </Router>

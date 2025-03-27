@@ -2,8 +2,8 @@ import React from 'react';
 import { Button, Space, Spin, Table, Typography } from 'antd';
 import type { TableProps } from 'antd';
 import { TripType } from '../../components/driverLogger/dailyLogs';
-import { COMPANIES_LINK, TRIPS_LINK } from '../../utils/constants';
-import { Link } from 'react-router-dom';
+import { API_DOCS_LINK, COMPANIES_LINK, TRIPS_LINK } from '../../utils/constants';
+import { Link, useNavigate } from 'react-router-dom';
 import axiosClient from '../../utils/axiosClient';
 import { useQuery } from '@tanstack/react-query';
 import { EyeOutlined, PlusOutlined } from "@ant-design/icons";
@@ -107,6 +107,7 @@ const columns: TableProps<TripType>['columns'] = [
 ];
 
 export const TripsList: React.FC = () => {
+  const navigate = useNavigate();
   const { data, isLoading } = useQuery({
     queryKey: ['trips'],
     queryFn: getTripData
@@ -121,7 +122,7 @@ export const TripsList: React.FC = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <Typography.Title level={2}>Trips</Typography.Title>
               <Space>
-              <Button type="primary" className='primary-btn'>Add Trip</Button>
+              <Button type="primary" onClick={() => navigate(`${API_DOCS_LINK}?tab=5`)} className='primary-btn'>Add Trip</Button>
               </Space>
           </div>
           <div>

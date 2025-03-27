@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { COMPANIES_LINK, TRIPS_LINK } from '../../utils/constants';
+import { API_DOCS_LINK, COMPANIES_LINK, TRIPS_LINK } from '../../utils/constants';
 import Logo from '../logo';
 import Footer from '../footer';
 
@@ -47,6 +47,12 @@ const AdminLayout = () => {
               icon: <BuildOutlined />,
               label: 'Companies',
               onClick: (() => navigate(COMPANIES_LINK))
+            },
+            {
+              key: 'docs',
+              icon: <BuildOutlined />,
+              label: 'Docs',
+              onClick: (() => navigate(API_DOCS_LINK))
             },
             {
               key: 'logout',
