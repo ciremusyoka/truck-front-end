@@ -5,3 +5,5 @@ export const TRIPS_LINK = '/trips';
 export const COMPANIES_LINK = '/companies';
 export const DRIVER_LINK = '/drivers';
 export const API_DOCS_LINK = '/api-docs';
+
+export const COOKIE_NAME = "truck_session";

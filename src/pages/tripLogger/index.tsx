@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../utils/axiosClient";
 import { DriversDailyLog } from "../../components/driverLogger/dailyLogs";
 import { TRIPS_LINK } from "../../utils/constants";
+import { DailyLogsMap } from "../../components/driverLogger/map";
 
 const getTripLogs = (tripId: string) => async () => {
   const { data } = await axiosClient.get(`/trips/${tripId}/logs_time_series/`);
@@ -30,8 +31,8 @@ export const DriverLogs = () => {
 
     const queryData = useQueries({
         queries: [
-          { queryKey: ["trip_log"], queryFn: getTripLogs(id as string) },
-          { queryKey: ["trip_data"], queryFn: getTripData(id as string) },
+          { queryKey: [`${id}-trip_log`], queryFn: getTripLogs(id as string) },
+          { queryKey: [`${id}-trip_data`], queryFn: getTripData(id as string) },
         ],
     });
 
@@ -47,6 +48,10 @@ export const DriverLogs = () => {
     
     if(isLoading) {
         return <Spin fullscreen />
+    }
+
+    if(!tripLogData || tripLogData.length === 0) {
+        return <p>No data available for ths trip</p>
     }
 
     const onChange = (key: string) => {
@@ -81,6 +86,11 @@ export const DriverLogs = () => {
                     trip={tripData}
                 />
             )}
+            {
+                activeTabKey && activeTabKey === MAP_KEY && (
+                    <DailyLogsMap data={tripLogData}/>
+                )
+            }
         </div>
     );
 };

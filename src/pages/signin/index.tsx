@@ -31,8 +31,13 @@ export const Register: React.FC = () => {
                 <Logo nameColor="black"/>
                 <br/> <br/>
                 <h3>Create an accout with us</h3>
+                <br/>
+            <p style={{color: "red"}}>Functionality not implemented 
+            <Link to={LOGIN_LINK} className="main-text"> go to login</Link>
+            </p>
             </div>
         </Flex>
+        
         <br/>
         <Form
           name="register"

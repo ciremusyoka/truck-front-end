@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { API_DOCS_LINK, COMPANIES_LINK, TRIPS_LINK } from '../../utils/constants';
 import Logo from '../logo';
 import Footer from '../footer';
+import { getAuthToken } from '../../utils/axiosClient';
 
 const { Header, Sider, Content } = Layout;
 
@@ -22,6 +23,12 @@ const AdminLayout = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const navigate = useNavigate();
+
+  const token = getAuthToken()
+
+  if (!token ) {
+      return <Navigate to="/" replace />;
+  }
 
   return (
     <Layout>

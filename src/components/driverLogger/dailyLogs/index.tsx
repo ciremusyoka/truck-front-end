@@ -48,14 +48,25 @@ export type TripType = {
 
 type CategoryType = "OFF_DUTY" |"ON_DUTY" | "DRIVING" | "SLEEPER_BERTH";
 type ActivityTime = Record<CategoryType, number>
-type SeriesData = {
+
+type Location = {
+    lat: number;
+    lng: number;
+  };
+  
+export type SeriesData = {
+    id: number;
+    trip_id: number;
     category: CategoryType;
-    date_created: string;
-    from: number | string
-    to: number | string;
     remarks: string;
-    odm_reading: number
-}
+    location: Location;
+    odm_reading: number;
+    date_created: string;
+    deleted: boolean;
+    date: string;
+    from: string | number;
+    to: string | number;
+};
 
 // export type SeriesData = BaseSeriesData;
 
@@ -154,7 +165,7 @@ export const DriversDailyLog = ( { printRef, data, date, trip }: DriversDailyLog
     let ondutyHours = 0
     if(activityTime.ON_DUTY) ondutyHours += activityTime.ON_DUTY
     if(activityTime.DRIVING) ondutyHours += activityTime.DRIVING
-    
+
     return (
         <div ref={printRef} id="driver-logger" className={style.wrapper} style={{ padding: 20,  margin: "auto" }}>
             <Row gutter={16} style={{ marginTop: 10 }}>
