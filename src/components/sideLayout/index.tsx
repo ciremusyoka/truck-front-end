@@ -9,16 +9,16 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { API_DOCS_LINK, COMPANIES_LINK, TRIPS_LINK } from '../../utils/constants';
+import { API_DOCS_LINK, COMPANIES_LINK, COOKIE_NAME, LOGIN_LINK, TRIPS_LINK } from '../../utils/constants';
 import Logo from '../logo';
 import Footer from '../footer';
 import { getAuthToken } from '../../utils/axiosClient';
+import Cookies from 'js-cookie';
 
 const { Header, Sider, Content } = Layout;
 
 const AdminLayout = () => {
     const [collapsed, setCollapsed] = useState(false);
-    const [logout, setLogout] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -28,6 +28,12 @@ const AdminLayout = () => {
 
   if (!token ) {
       return <Navigate to="/" replace />;
+  }
+
+  const logout = () => {
+    Cookies.remove(COOKIE_NAME);
+    window.location.href = LOGIN_LINK;
+    return;
   }
 
   return (
@@ -65,7 +71,7 @@ const AdminLayout = () => {
               key: 'logout',
               icon: <LogoutOutlined />,
               label: 'Logout',
-              onClick: (() => setLogout(true))
+              onClick: (logout)
             },
           ]}
         />

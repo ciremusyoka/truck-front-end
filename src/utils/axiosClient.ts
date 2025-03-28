@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { API_URL } from './configs';
 import Cookies from 'js-cookie';
-import { COOKIE_NAME } from './constants';
+import { COOKIE_NAME, LOGIN_LINK } from './constants';
 
 export const getAuthToken = () => Cookies.get(COOKIE_NAME);
 
@@ -20,5 +20,22 @@ axiosClient.interceptors.request.use((config) => {
   }
   return config;
 });
+
+let isRedirecting = false;
+
+// Add response interceptor to handle 401 errors
+axiosClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      if (!isRedirecting) {
+        isRedirecting = true;
+        Cookies.remove(COOKIE_NAME);
+        window.location.href = LOGIN_LINK;
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default axiosClient;
