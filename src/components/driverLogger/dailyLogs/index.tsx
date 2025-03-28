@@ -46,7 +46,7 @@ export type TripType = {
     deleted: boolean;
 };
 
-type CategoryType = "OFF_DUTY" |"ON_DUTY" | "DRIVING" | "SLEEPER_BERTH";
+export type CategoryType = "OFF_DUTY" |"ON_DUTY" | "DRIVING" | "SLEEPER_BERTH";
 type ActivityTime = Record<CategoryType, number>
 
 type Location = {
@@ -150,7 +150,7 @@ const LogLineChart = ({data}: {data: ProcessedSeriesData[]}) => {
             domain={activityOrder}
             
         />
-        <Tooltip formatter={(value, test, data) => (<ToolTipCustom data={data.payload} />)} />
+        {/* <Tooltip formatter={(_, test, data) => (<ToolTipCustom data={data.payload} />)} /> */}
         <Legend />
         <Line type="monotone" dataKey="category" stroke="#8884d8" strokeWidth={2} />
         </LineChart>

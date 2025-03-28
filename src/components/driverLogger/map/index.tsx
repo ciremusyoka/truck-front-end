@@ -1,31 +1,72 @@
-import { Select } from "antd";
+import { Divider, Select, Spin } from "antd";
 import { useState, useMemo } from "react";
-import Map, { NavigationControl, GeolocateControl, Source, Layer, Popup } from "react-map-gl/mapbox";
-import { SeriesData } from "../dailyLogs";
+import Map, { NavigationControl, GeolocateControl, LngLatBoundsLike, Source, Layer, Popup, MapMouseEvent } from "react-map-gl/mapbox";
+import { CategoryType, SeriesData } from "../dailyLogs";
+import { useQuery } from "@tanstack/react-query";
+import axiosClient from "../../../utils/axiosClient";
+import bbox from "@turf/bbox";
 
 
 interface PointData {
   [date: string]: SeriesData[];
 }
 
+type Location = {
+  lat: number;
+  lng: number;
+};
+
+type TripData = {
+  id: number;
+  category: CategoryType;
+  remarks: string;
+  location: Location;
+  odm_reading: number;
+  date_created: string; // Use `Date` if parsing it
+  deleted: boolean;
+  trip: number;
+};
+
 type DailyLogsMapProps = {
-    data: PointData
+    data: PointData;
+    id?: string;
 }
 
-// const data: PointData = {
-//   "2024-03-26": [
-//     { lat: 37.7749, lng: -122.4194, name: "San Francisco" },
-//     { lat: 34.0522, lng: -118.2437, name: "Los Angeles" }
-//   ],
-//   "2024-03-27": [
-//     { lat: 40.7128, lng: -74.006, name: "New York" },
-//     { lat: 41.8781, lng: -87.6298, name: "Chicago" }
-//   ]
-// };
+const getInitialView = (geoJsonLine: any) => {
+  const [minLng, minLat, maxLng, maxLat] = bbox(geoJsonLine); // Compute bounding box
+  const centerLng = (minLng + maxLng) / 2;
+  const centerLat = (minLat + maxLat) / 2;
 
-export const DailyLogsMap = ( {data}: DailyLogsMapProps) => {
+  if(!centerLat || !centerLng) {
+    return {}
+  }
+
+  return {
+    latitude: centerLat,
+    longitude: centerLng,
+    zoom: 10, // Adjust as needed
+    bounds: [minLng, minLat, maxLng, maxLat] as LngLatBoundsLike,
+  };
+};
+
+const getTripData = (id: string) => async () => {
+  const { data } = await axiosClient.get(`/trips/${id}/logs/`);
+  return data;
+};
+
+
+export const DailyLogsMap = ( {data, id}: DailyLogsMapProps) => {
   const [selectedDate, setSelectedDate] = useState<string[]>([]);
-//   const [popupInfo, setPopupInfo] = useState<{ lat: number; lng: number; name: string } | null>(null);
+  const [hoveredPoint, setHoveredPoint] = useState<TripData[] | null>(null);
+
+  const { data:tripData, isLoading } = useQuery({
+    queryKey: [`trip-log-${id}`],
+    queryFn: getTripData(id as string)
+  });
+
+  if(isLoading && !tripData) {
+    <Spin fullscreen />
+  }
 
   const filteredPoints = useMemo(() => {
     let selected = selectedDate
@@ -52,19 +93,51 @@ export const DailyLogsMap = ( {data}: DailyLogsMapProps) => {
     ]
   }), [filteredPoints]);
 
+  const geoJsonPoints = useMemo(
+    () => ({
+      type: "FeatureCollection",
+      features: (tripData || []).map((trip: TripData) => ({
+        type: "Feature",
+        properties: { ...trip },
+        geometry: {
+          type: "Point",
+          coordinates: [trip.location.lng, trip.location.lat],
+        },
+      })),
+    }),
+    [tripData]
+  );
+
+  const initialViewState = useMemo(() => getInitialView(geoJsonLine), [geoJsonLine])
+
   const options = Object.keys(data).map(key => ({label: key, value:key}))
 
   const handleChange = (value: string[]) => {
     setSelectedDate(value)
   };
 
+  const tripsPointLayerName = "trips-point-layer"
+
+  const getFeatureData = (e: MapMouseEvent) => {
+    const newFeatures:TripData[] = []
+    e.features?.forEach(feature => {
+      if (feature && feature.geometry.type === "Point") {
+        const props = feature.properties as TripData;
+        const location = typeof props.location === "string"
+          ? JSON.parse(props.location)
+          : props.location;
+        newFeatures.push({ ...props, location })
+      }
+    })
+    if(newFeatures.length > 0){
+      setHoveredPoint(newFeatures);
+    } else {
+      setHoveredPoint(null);
+    }
+  }
+
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      {/* <select onChange={(e) => setSelectedDate(e.target.value)} value={selectedDate}>
-        {Object.keys(data).map((date) => (
-          <option key={date} value={date}>{date}</option>
-        ))}
-      </select> */}
       <Select
           mode="multiple"
           size="large"
@@ -75,9 +148,12 @@ export const DailyLogsMap = ( {data}: DailyLogsMapProps) => {
           options={options}
         />
       <Map
-        // initialViewState={{ latitude: 37.7749, longitude: -122.4194, zoom: 4 }}
+        initialViewState={initialViewState}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+        interactiveLayerIds={[tripsPointLayerName]}
+        onMouseEnter={getFeatureData}
+        onMouseLeave={() => setHoveredPoint(null)}
       >
         <NavigationControl position="top-left" />
         <GeolocateControl position="top-left" />
@@ -90,6 +166,40 @@ export const DailyLogsMap = ( {data}: DailyLogsMapProps) => {
             paint={{ "line-color": "#FF5733", "line-width": 4 }}
           />
         </Source>
+        {/* Points Layer */}
+        <Source id={`${tripsPointLayerName}-source`} type="geojson" data={geoJsonPoints as any}>
+          <Layer
+            id={tripsPointLayerName}
+            type="circle"
+            paint={{
+              "circle-radius": 6,
+              "circle-color": "#007AFF",
+              "circle-stroke-width": 2,
+              "circle-stroke-color": "#fff",
+            }}
+          />
+        </Source>
+
+        {(hoveredPoint && hoveredPoint.length > 0) &&(
+          <Popup
+            latitude={hoveredPoint[0].location.lat}
+            longitude={hoveredPoint[0].location.lng}
+            closeButton={false}
+            closeOnClick={false}
+          >
+            {[...hoveredPoint].reverse().map(point => (
+              <div key={point.category}>
+                <div style={{display: "flex", justifyContent: "center"}}>
+                  <h2>{point.date_created}</h2>
+                </div>
+                <p><strong>Category:</strong> {point.category}</p>
+                <p><strong>Remarks:</strong> {point.remarks}</p>
+                <p><strong>Odometer:</strong> {point.odm_reading}</p>
+                <Divider/>
+              </div>
+            ))}
+          </Popup>
+        )}
       </Map>
     </div>
   );

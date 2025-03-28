@@ -88,7 +88,7 @@ export const DriverLogs = () => {
             )}
             {
                 activeTabKey && activeTabKey === MAP_KEY && (
-                    <DailyLogsMap data={tripLogData}/>
+                    <DailyLogsMap data={tripLogData} id={id} />
                 )
             }
         </div>
